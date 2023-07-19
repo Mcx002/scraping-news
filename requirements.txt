@@ -1,0 +1,6 @@
+requests==2.31.0
+beautifulsoup4==4.12.2
+numpy==1.25.1
+progress==1.6
+pathlib==1.0.1
+datetime==5.2
