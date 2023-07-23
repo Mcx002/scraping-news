@@ -17,9 +17,9 @@ def compose_raw_article(raw_articles):
         link = raw_article.find('a')['href']
 
         # ensure just article will be scraped
-        is_article = re.search("(https://news.|https://|https://www.)detik.com", link)
-        if not is_article:
-            continue
+        # is_article = re.search("(https://news.|https://|https://www.)detik.com", link)
+        # if not is_article:
+        #     continue
 
         # init article
         article = Article()
@@ -74,13 +74,24 @@ def write_paragraphs(article_filename, paragraphs):
 def write_article(article, article_filename, page=1):
     # prepare link
     link = article.link
-    if page > 1:
-        # find pages on an article
-        link = link + '/' + str(page)
 
     # retrieve article
     response = find_document(link)
     soup = BeautifulSoup(response.text, 'html.parser')
+    siteType = soup.find('meta', attrs={'property': 'og:type', 'content': 'article'})
+    if siteType is None:
+        return
+
+    if page == 1:
+        # prepare file
+        f = open(article_filename, 'w')
+        f.write('Title: ' + article.title + '\n\n')
+        f.close()
+
+    if page > 1:
+        # find pages on an article
+        link = link + '/' + str(page)
+
     pages = soup.select('a.detail__anchor-numb')
 
     paragraphs = soup.select('div.detail__body-text > p')
@@ -88,7 +99,7 @@ def write_article(article, article_filename, page=1):
     # write paragraphs to text
     write_paragraphs(article_filename, paragraphs)
 
-    if len(pages) > 1:
+    if len(pages) > 1 and page < len(pages):
         write_article(article, article_filename, page + 1)
 
 
@@ -98,12 +109,8 @@ def get_documents_from_articles(articles):
     bar = Bar('Retrieving documents', max=len(articles))
     for article in articles:
         # prepare article filename
-        article_filename = str(get_root_dir()) + '/data/' + str(calendar.timegm(datetime.datetime.now().timetuple())) + '_' + article.title
-
-        # prepare file
-        f = open(article_filename, 'w')
-        f.write('Title: ' + article.title + '\n\n')
-        f.close()
+        article_filename = str(get_root_dir()) + '/data/' + str(
+            calendar.timegm(datetime.datetime.now().timetuple())) + '_' + article.title
 
         write_article(article, article_filename)
 
