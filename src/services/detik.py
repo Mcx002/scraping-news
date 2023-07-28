@@ -1,3 +1,5 @@
+import os
+
 from src.repositories.detik import find_articles, find_document
 from bs4 import BeautifulSoup
 from src.models.article import Article
@@ -6,7 +8,7 @@ from progress.bar import Bar
 import re
 import datetime
 import calendar
-from utils.path import get_root_dir
+from utils.path import get_root_dir, to_dash_case
 
 
 def compose_raw_article(raw_articles):
@@ -41,6 +43,9 @@ def get_articles(keyword, page_number):
 
         # find raw articles
         response = find_articles(keyword, page)
+        if response is None:
+            print('Failed when retrieving articles information on page', page)
+            continue
         soup = BeautifulSoup(response.text, 'html.parser')
         raw_articles = soup.find_all('article')
 
@@ -71,22 +76,30 @@ def write_paragraphs(article_filename, paragraphs):
     f.close()
 
 
-def write_article(article, article_filename, page=1):
+def append(filename, text):
+    f = open(filename, 'a')
+    f.write(text)
+    f.write('\n')
+    f.close()
+
+
+def write_article(article, path_folder, article_filename, page=1):
+    txt_file = path_folder + '/' + article_filename + '.txt'
+    yml_file = path_folder + '/' + article_filename + '.yaml'
+
     # prepare link
     link = article.link
 
     # retrieve article
     response = find_document(link)
+    if response is None:
+        print('Failed when retrieving document on url: ', link)
+        return
+
     soup = BeautifulSoup(response.text, 'html.parser')
     siteType = soup.find('meta', attrs={'property': 'og:type', 'content': 'article'})
     if siteType is None:
         return
-
-    if page == 1:
-        # prepare file
-        f = open(article_filename, 'w')
-        f.write('Title: ' + article.title + '\n\n')
-        f.close()
 
     if page > 1:
         # find pages on an article
@@ -95,24 +108,40 @@ def write_article(article, article_filename, page=1):
     pages = soup.select('a.detail__anchor-numb')
 
     paragraphs = soup.select('div.detail__body-text > p')
+    author = soup.select('div.detail__author')
 
     # write paragraphs to text
-    write_paragraphs(article_filename, paragraphs)
+    append(yml_file, 'Text file: ' + article_filename + '.txt')
+    if len(author) > 0:
+        append(yml_file, 'author: ' + author[0].text)
+    else:
+        print(" Article '" + article_filename + "' doesn't have author")
+    append(yml_file, 'title: \'' + article.title.replace('\'', '"') + '\'')
+    append(yml_file, 'id: ' + article_filename)
+
+    # write paragraphs to text
+    write_paragraphs(txt_file, paragraphs)
 
     if len(pages) > 1 and page < len(pages):
-        write_article(article, article_filename, page + 1)
+        write_article(article, path_folder, article_filename, page + 1)
 
 
 def get_documents_from_articles(articles):
     documents = []
 
+    path_folder = str(get_root_dir()) + '/data/' + str(
+        calendar.timegm(datetime.datetime.now().timetuple())) + '/'
+
+    isFolderExists = os.path.exists(path_folder)
+    if not isFolderExists:
+        os.mkdir(path_folder)
+
     bar = Bar('Retrieving documents', max=len(articles))
     for article in articles:
         # prepare article filename
-        article_filename = str(get_root_dir()) + '/data/' + str(
-            calendar.timegm(datetime.datetime.now().timetuple())) + '_' + article.title
+        article_filename = to_dash_case(article.title)
 
-        write_article(article, article_filename)
+        write_article(article, path_folder, article_filename)
 
         bar.next()
     bar.finish()
