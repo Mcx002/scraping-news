@@ -1,3 +1,4 @@
+import locale
 import os
 
 from src.repositories.detik import find_articles, find_document
@@ -138,10 +139,20 @@ def write_article(article, path_folder, article_filename, page=1):
     pages = soup.select('a.detail__anchor-numb')
 
     paragraphs = soup.select('div.detail__body-text > p')
-    author = soup.select('div.detail__author')
 
     # write paragraphs to text
     if page == 1:
+        author = soup.select('div.detail__author')
+        date_tag = soup.select('meta[name="publishdate"]')
+        if len(date_tag) > 0:
+            date_str = date_tag[0].attrs['content'].replace(' WIB', '')
+            locale.setlocale(locale.LC_TIME, "id_ID.utf8")
+            date = datetime.datetime.strptime(date_str, '%Y/%m/%d %H:%M:%S')
+            append(yml_file, 'date: ' + date_str)
+            append(yml_file, 'timestamp: ' + str(calendar.timegm(date.timetuple())))
+        else:
+            print(" Article '" + article_filename + "' doesn't have date")
+
         append(yml_file, 'Text file: ' + article_filename + '.txt')
         if len(author) > 0:
             append(yml_file, 'author: ' + author[0].text)
