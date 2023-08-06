@@ -13,3 +13,13 @@ def to_dash_case(text):
     text = '_'.join(temp)
 
     return text
+
+
+def get_file_name(filename):
+    split_file = filename.split('.')
+    return ''.join(split_file[0:len(split_file) - 1])
+
+
+def get_ext(filename):
+    split_file = filename.split('.')
+    return split_file[len(split_file) - 1]
