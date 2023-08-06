@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.4.0
+- feat(document): Add write date and timestamp
+
 ## v0.3.0
 - feat(document): Add write unique data feature
 

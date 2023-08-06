@@ -172,7 +172,7 @@ def scrap():
     keyword = input('Keyword: ')
     page_number = input('How many pages? (number): ')
 
-    scrap_option_input = input('Scrap with all the comments as opinion? ([y]/n): ')
+    scrap_option_input = 'y'
     scrap_option = True
     match scrap_option_input:
         case 'n':
