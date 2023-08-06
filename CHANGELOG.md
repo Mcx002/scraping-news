@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.3.0
+- feat(document): Add write unique data feature
+
 ## v0.2.0
 - feat(document): Add orange3 formatted data
 
