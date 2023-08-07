@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.5.1
+- fix(input): remove input scrap with opinion
+
 ## v0.5.0
 - feat(document): Add prefix to filename for sorting purpose
 
