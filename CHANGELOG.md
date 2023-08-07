@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.5.0
+- feat(document): Add prefix to filename for sorting purpose
+
 ## v0.4.0
 - feat(document): Add write date and timestamp
 
