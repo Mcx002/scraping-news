@@ -13,10 +13,9 @@ from utils.path import get_root_dir, to_dash_case, get_ext, get_file_name
 
 
 class DetikScrapService:
-    def __init__(self, keyword: str, page_number: int, scrap_opinion: bool, folder: None | str):
+    def __init__(self, keyword: str, page_number: int, folder: None | str):
         self.keyword = keyword
         self.page_number = page_number
-        self.scrap_opinion = scrap_opinion
         self.folder = folder
 
         self.articles: [Article] = []
@@ -192,16 +191,6 @@ def scrap():
     keyword = input('Keyword: ')
     page_number = input('How many pages? (number): ')
 
-    scrap_option_input = input('Scrap with all the comments as opinion? ([y]/n): ')
-    scrap_option = True
-    match scrap_option_input:
-        case 'n':
-            scrap_option = False
-        case 'y':
-            scrap_option = True
-        case _:
-            print('I think you wanna say yas, isn\'t it')
-
     print('\n\nWhen you fill folder name, it will make your scrapping data only go to that folder')
     print('The advantage is, it will matching the upcoming scrapping data id with the old data id on that folder')
     print('The id is a conversion from title -> lowercased -> remove unnecessary punctuation -> change space to '
@@ -212,6 +201,6 @@ def scrap():
     if folder_input != '':
         folder = folder_input
 
-    detik_scrap_service = DetikScrapService(keyword, int(page_number), scrap_option, folder)
+    detik_scrap_service = DetikScrapService(keyword, int(page_number), folder)
     detik_scrap_service.get_articles()
     detik_scrap_service.write_document_to_files()
