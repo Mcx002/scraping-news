@@ -45,11 +45,6 @@ class DetikScrapService:
         for raw_article in raw_articles:
             link = raw_article.find('a')['href']
 
-            # ensure just article will be scraped
-            # is_article = re.search("(https://news.|https://|https://www.)detik.com", link)
-            # if not is_article:
-            #     continue
-
             # init article
             article = Article()
             article.title = raw_article.find('h2', attrs={'class': 'title'}).text
@@ -59,9 +54,11 @@ class DetikScrapService:
             self.articles.append(article)
 
     def write_document_to_files(self):
+        # check is articles has been retrieved
         if len(self.articles) == 0:
             print('please run the get_articles() first to retrieve articles, because documents need it')
 
+        # set folder name if not inputted
         if self.folder is None:
             self.folder = str(calendar.timegm(datetime.datetime.now().timetuple()))
 
@@ -71,14 +68,16 @@ class DetikScrapService:
         if not isFolderExists:
             os.mkdir(path_folder)
 
+        # get existing filenames
         existing_files = os.listdir(path_folder)
-        existing_files = [get_file_name(a) for a in existing_files if get_ext(a) == 'txt']
+        existing_files = ['_'.join(get_file_name(a).split('_')[1:]) for a in existing_files if get_ext(a) == 'txt']
 
         bar = Bar('Retrieving documents', max=len(self.articles))
         for article in self.articles:
             # prepare article filename
             article_filename = to_dash_case(article.title)
 
+            # skip if exists
             if article_filename in existing_files:
                 bar.next()
                 continue
@@ -108,16 +107,13 @@ def write_paragraphs(article_filename, paragraphs):
 
 
 def append(filename, text):
-    f = open(filename, 'a')
+    f = open(filename, 'a', encoding='utf-8')
     f.write(text)
     f.write('\n')
     f.close()
 
 
-def write_article(article, path_folder, article_filename, page=1):
-    txt_file = path_folder + '/' + article_filename + '.txt'
-    yml_file = path_folder + '/' + article_filename + '.yaml'
-
+def write_article(article, path_folder, article_filename, page=1, prefix=''):
     # prepare link
     link = article.link
 
@@ -140,9 +136,25 @@ def write_article(article, path_folder, article_filename, page=1):
 
     paragraphs = soup.select('div.detail__body-text > p')
 
+    # get publish timestamp to be prefix filename
+    if page == 1:
+        date_tag = soup.select('meta[name="publishdate"]')
+        if len(date_tag) > 0:
+            date_str = date_tag[0].attrs['content'].replace(' WIB', '')
+            locale.setlocale(locale.LC_TIME, "id_ID.utf8")
+            date = datetime.datetime.strptime(date_str, '%Y/%m/%d %H:%M:%S')
+            prefix = str(calendar.timegm(date.timetuple()))
+        else:
+            print(" Article '" + article_filename + "' doesn't have date")
+
+    txt_file = path_folder + '/' + prefix + '_' + article_filename + '.txt'
+    yml_file = path_folder + '/' + prefix + '_' + article_filename + '.yaml'
+
     # write paragraphs to text
     if page == 1:
         author = soup.select('div.detail__author')
+
+        # write publish date and timestamp
         date_tag = soup.select('meta[name="publishdate"]')
         if len(date_tag) > 0:
             date_str = date_tag[0].attrs['content'].replace(' WIB', '')
@@ -153,26 +165,34 @@ def write_article(article, path_folder, article_filename, page=1):
         else:
             print(" Article '" + article_filename + "' doesn't have date")
 
+        # write related text file on yaml file
         append(yml_file, 'Text file: ' + article_filename + '.txt')
+
+        # write source article
+        append(yml_file, 'link: ' + link)
         if len(author) > 0:
             append(yml_file, 'author: ' + author[0].text)
         else:
             print(" Article '" + article_filename + "' doesn't have author")
+
+        # write title
         append(yml_file, 'title: \'' + article.title.replace('\'', '"') + '\'')
+
+        # write id file
         append(yml_file, 'id: ' + article_filename)
 
     # write paragraphs to text
     write_paragraphs(txt_file, paragraphs)
 
     if len(pages) > 1 and page < len(pages):
-        write_article(article, path_folder, article_filename, page + 1)
+        write_article(article, path_folder, article_filename, page + 1, prefix)
 
 
 def scrap():
     keyword = input('Keyword: ')
     page_number = input('How many pages? (number): ')
 
-    scrap_option_input = 'y'
+    scrap_option_input = input('Scrap with all the comments as opinion? ([y]/n): ')
     scrap_option = True
     match scrap_option_input:
         case 'n':
