@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.6.0
+- feat(pikiran-rakyat): Add pikiran rakyat scrapper
+
 ## v0.5.1
 - fix(input): remove input scrap with opinion
 
