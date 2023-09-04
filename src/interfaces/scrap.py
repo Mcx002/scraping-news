@@ -18,3 +18,4 @@ class ScrapInterface:
 class ScrapperMedia(Enum):
     detik = 'detik'
     pikiran_rakyat = 'pikiran-rakyat'
+    cnn_indonesia = 'cnn-indonesia'
