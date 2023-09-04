@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.7.0
+- feat(cnn-indonesia): Add CNN Indonesia Scrapper
+
 ## v0.6.0
 - feat(pikiran-rakyat): Add pikiran rakyat scrapper
 
