@@ -35,6 +35,8 @@ def find_dynamic_articles(keyword, page, media: ScrapperMedia):
         match media:
             case ScrapperMedia.cnn_indonesia:
                 url = 'https://www.cnnindonesia.com/search/?query={}&page={}'.format(keyword, page)
+            case ScrapperMedia.tribunnews:
+                url = 'https://www.tribunnews.com/search?q={0}&gsc.q={0}&gsc.page={1}'.format(keyword, page)
             case _:
                 print('Scrapper Media does not exists')
                 sys.exit(1)
