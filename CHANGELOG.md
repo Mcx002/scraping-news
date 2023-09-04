@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.8.0
+- feat(tribunnews): Add Tribunnews Scrapper
+
 ## v0.7.0
 - feat(cnn-indonesia): Add CNN Indonesia Scrapper
 
