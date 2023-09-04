@@ -47,7 +47,7 @@ def write_article_metadata(yml_file, metadata: ArticleMetadata):
 
 
 def create_path_result(path_folder, prefix, article_filename, media: ScrapperMedia):
-    txt_file = '{}{}/{}_{}.{}'.format(path_folder, media, prefix, article_filename, 'txt')
-    yml_file = '{}{}/{}_{}.{}'.format(path_folder, media, prefix, article_filename, 'yaml')
+    txt_file = '{}{}/{}_{}.{}'.format(path_folder, media.value, prefix, article_filename, 'txt')
+    yml_file = '{}{}/{}_{}.{}'.format(path_folder, media.value, prefix, article_filename, 'yaml')
 
     return txt_file, yml_file
