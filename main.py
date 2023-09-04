@@ -2,6 +2,7 @@ import sys
 
 from src.services.detik import scrap as detik_scrap
 from src.services.pikiran_rakyat import pikiran_rakyat_scrap
+from src.services.cnn_indonesia import cnn_indonesia_scrap
 
 
 def prompt_menu():
@@ -9,11 +10,12 @@ def prompt_menu():
     print('0. Stop Application')
     print('1. Scrap Detik')
     print('2. Scrap Pikiran Rakyat')
+    print('3. Scrap CNN Indonesia')
 
     return input('Choose which media you wanna scrap for: ')
 
 
-def main():
+if __name__ == "__main__":
     menu = '-1'
     while menu != '0':
         menu = sys.argv[1] if 1 < len(sys.argv) else prompt_menu()
@@ -39,11 +41,10 @@ def main():
                 detik_scrap(keyword, page_number, folder)
             case "2":
                 pikiran_rakyat_scrap(keyword, page_number, folder)
+            case "3":
+                cnn_indonesia_scrap(keyword, page_number, folder)
             case _:
                 print('Please input the correct menu')
 
         if len(sys.argv) > 1:
             menu = '0'
-
-
-main()
