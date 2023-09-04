@@ -49,6 +49,8 @@ The 3rd is how many pages you need the data
 the 4th argument what folder name you'd like to save the scrap result
 
 ## Note
+
+### Contribution
 > Feel free to contribute to this open source project
 > 
 > If you need a new media to added to this project, feel free to
@@ -56,6 +58,28 @@ the 4th argument what folder name you'd like to save the scrap result
 > 
 > But keep in mind, to use [angular commit message convention](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#-commit-message-format)
 > before you do pull request 
+
+### Dynamic Websites
+> There're several site that applying dynamic load data that
+> beautifulsoup can't read the site at the first sight, needs to
+> wait a couple second to fully load it
+> 
+> The sites are such as:
+> - CNN Indonesia
+> - Tribunnews
+> - Liputan6
+> - Kompas
+> 
+> So I used selenium to scrap the website that needed you to keep
+> the display on to load all the pages else the progress will not
+> processed
+> 
+> If you have a trouble with your internet, you can set the
+> environment variable SELENIUM_WAIT_TIME to higher number, as
+> it will set the wait time selenium tries to read the page you scrap
+
+## Tested on
+- Ubuntu 22.04.3 LTS
 
 ## Contributors
 - Muchlish Choeruddin [Mcx002]
