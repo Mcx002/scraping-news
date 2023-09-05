@@ -20,3 +20,4 @@ class ScrapperMedia(Enum):
     pikiran_rakyat = 'pikiran-rakyat'
     cnn_indonesia = 'cnn-indonesia'
     tribunnews = 'tribunnews'
+    kompas = 'kompas'
