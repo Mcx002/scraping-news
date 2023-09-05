@@ -1,18 +1,20 @@
 import sys
 
-from src.services.detik import scrap as detik_scrap
-from src.services.pikiran_rakyat import pikiran_rakyat_scrap
-from src.services.cnn_indonesia import cnn_indonesia_scrap
-from src.services.tribunnews import tribunnews_scrap
+from src.services.detik import detik_scrape
+from src.services.kompas import kompas_scrape
+from src.services.pikiran_rakyat import pikiran_rakyat_scrape
+from src.services.cnn_indonesia import cnn_indonesia_scrape
+from src.services.tribunnews import tribunnews_scrape
 
 
 def prompt_menu():
     print('Menu:')
     print('0. Stop Application')
-    print('1. Scrap Detik')
-    print('2. Scrap Pikiran Rakyat')
-    print('3. Scrap CNN Indonesia')
-    print('4. Scrap Tribunnews')
+    print('1. Scrape Detik')
+    print('2. Scrape Pikiran Rakyat')
+    print('3. Scrape CNN Indonesia')
+    print('4. Scrape Tribunnews (limited 11 pages)')
+    print('5. Scrape Kompas (limited 11 pages)')
 
     return input('Choose which media you wanna scrap for: ')
 
@@ -40,13 +42,15 @@ if __name__ == "__main__":
             case "0":
                 print('Application stopped')
             case "1":
-                detik_scrap(keyword, page_number, folder)
+                detik_scrape(keyword, page_number, folder)
             case "2":
-                pikiran_rakyat_scrap(keyword, page_number, folder)
+                pikiran_rakyat_scrape(keyword, page_number, folder)
             case "3":
-                cnn_indonesia_scrap(keyword, page_number, folder)
+                cnn_indonesia_scrape(keyword, page_number, folder)
             case "4":
-                tribunnews_scrap(keyword, page_number, folder)
+                tribunnews_scrape(keyword, page_number, folder)
+            case "5":
+                kompas_scrape(keyword, page_number, folder)
             case _:
                 print('Please input the correct menu')
 
