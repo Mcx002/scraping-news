@@ -5,6 +5,9 @@ Welcome to Scraping News v0.6.0
 Scrapper:
 - Detik
 - Pikiran Rakyat
+- CNN Indonesia
+- Tribunnews (Limited pages)
+- Kompas (Limited pages)
 
 ## Result
 ### Scrap Result

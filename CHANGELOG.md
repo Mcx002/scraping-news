@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.0
+- docs(readme): Update readme
+- feat(kompas): Add Kompas Scraper
+
 ## v0.8.0
 - feat(tribunnews): Add Tribunnews Scrapper
 
