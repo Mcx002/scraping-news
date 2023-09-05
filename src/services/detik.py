@@ -193,7 +193,7 @@ def write_detik_article(article, path_folder, article_filename, page=1, prefix='
         write_detik_article(article, path_folder, article_filename, page + 1, prefix)
 
 
-def scrap(keyword, page_number, folder):
+def detik_scrape(keyword, page_number, folder):
     print('scrap {} on detik'.format(keyword))
     detik_scrap_service = DetikScrapService(keyword, int(page_number), folder)
     detik_scrap_service.get_articles()

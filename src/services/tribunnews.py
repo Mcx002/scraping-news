@@ -8,6 +8,7 @@ from pathlib import Path
 
 from bs4 import BeautifulSoup
 from progress.bar import Bar
+from selenium.common import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
 
 from src.interfaces.scrap import ScrapInterface, ScrapperMedia
@@ -30,13 +31,18 @@ class TribunnewsScrapService(ScrapInterface):
         for i in range(self.page_number):
             page = i + 1
 
-            driver = find_dynamic_articles(self.keyword, page, ScrapperMedia.tribunnews)
+            try:
+                driver = find_dynamic_articles(self.keyword, page, ScrapperMedia.tribunnews)
 
-            raw_articles = driver.find_elements(By.CSS_SELECTOR, '.gsc-result')
+                raw_articles = driver.find_elements(By.CSS_SELECTOR, '.gsc-result')
 
-            self.compose_raw_article(raw_articles)
+                self.compose_raw_article(raw_articles)
 
-            driver.quit()
+                driver.quit()
+            except TimeoutException:
+                print(' missed 1 page. reason: request timeout')
+            except WebDriverException:
+                print(' missed 1 page. Failed to decode response from marionette')
 
             bar.next()
         bar.finish()
@@ -195,7 +201,7 @@ def write_tribunnews_article(article, path_folder, article_filename, page=1, pre
         write_tribunnews_article(article, path_folder, article_filename, page + 1, prefix)
 
 
-def tribunnews_scrap(keyword, page_number, folder):
+def tribunnews_scrape(keyword, page_number, folder):
     print('scrap {} on tribunnews'.format(keyword))
     scrap_service = TribunnewsScrapService(keyword, int(page_number), folder)
     scrap_service.get_article()

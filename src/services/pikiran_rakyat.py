@@ -190,7 +190,7 @@ def write_pikiran_rakyat_article(article, path_folder, article_filename, page=1,
         write_pikiran_rakyat_article(article, path_folder, article_filename, page + 1, prefix)
 
 
-def pikiran_rakyat_scrap(keyword, page_number, folder):
+def pikiran_rakyat_scrape(keyword, page_number, folder):
     print('scrap {} on pikiran-rakyat'.format(keyword))
     scrap_service = PikiranRakyatScrapService(keyword, int(page_number), folder)
     scrap_service.get_article()
