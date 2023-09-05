@@ -41,6 +41,9 @@ python main.py 2 "technology" 5 tech
 The 1st argument you can choose between those menu:
 1. Detik
 2. Pikiran Rakyat
+3. CNN Indonesia
+4. Tribunnews
+5. Kompas
 
 The 2nd argument is the keyword you look after
 
@@ -67,7 +70,6 @@ the 4th argument what folder name you'd like to save the scrap result
 > The sites are such as:
 > - CNN Indonesia
 > - Tribunnews
-> - Liputan6
 > - Kompas
 > 
 > So I used selenium to scrap the website that needed you to keep
